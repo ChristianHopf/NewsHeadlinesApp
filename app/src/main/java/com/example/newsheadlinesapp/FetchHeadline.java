@@ -2,6 +2,7 @@ package com.example.newsheadlinesapp;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -10,20 +11,23 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FetchHeadline extends AsyncTask<String, Void, String> {
     private WeakReference<TextView> mTitleText;
     private WeakReference<TextView> mAuthorText;
     private WeakReference<TextView> mDescriptionText;
-    private ArrayList<HeadlineModel> headlineModelArrayList;
+    private List<HeadlineModel> headlineModelList;
     private Context context;
+    private AppDatabase mDb;
 
-    FetchHeadline(Context context, ArrayList<HeadlineModel> headlineModelArrayList) {
+    FetchHeadline(Context context, List<HeadlineModel> headlineModelArrayList) {
         /*this.mTitleText = new WeakReference<>(titleText);
         this.mAuthorText = new WeakReference<>(authorText);
         this.mDescriptionText = new WeakReference<>(descriptionText);*/
         this.context = context;
-        this.headlineModelArrayList = headlineModelArrayList;
+        this.headlineModelList = headlineModelList;
+        mDb = AppDatabase.getInstance(context);
     }
 
     /**
@@ -66,10 +70,21 @@ public class FetchHeadline extends AsyncTask<String, Void, String> {
                     author = article.getString("author");
                     description = article.getString("description");
                     if (title != null && author != null && description != null) {
+                        Log.d(FetchHeadline.class.getSimpleName(), "New headline");
                         // add article information to a headlinemodel,
                         // and append the headlinemodel to the arraylist
                         HeadlineModel model = new HeadlineModel(title, author, description);
-                        headlineModelArrayList.add(model);
+                        //headlineModelArrayList.add(model);
+                        // instead of populating arraylist, populate room db
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDb.headlineDao().insertHeadline(model);
+                            }
+                        });
+                        title = null;
+                        author = null;
+                        description = null;
                     } else {
                         /*mTitleText.get().setText(R.string.no_results);
                         mAuthorText.get().setText(R.string.no_results);

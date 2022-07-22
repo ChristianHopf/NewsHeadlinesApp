@@ -11,14 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.Viewholder>{
     private Context context;
-    private ArrayList<HeadlineModel> headlineModelArrayList;
+    private List<HeadlineModel> headlineModelList;
 
-    public HeadlineAdapter(Context context, ArrayList<HeadlineModel> headlineModelArrayList) {
+    public HeadlineAdapter(Context context) {
         this.context = context;
-        this.headlineModelArrayList = headlineModelArrayList;
     }
 
     @NonNull
@@ -31,13 +31,25 @@ public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.Viewho
     @Override
     public void onBindViewHolder(@NonNull HeadlineAdapter.Viewholder holder, int position) {
         // bind data to each card layout
-        HeadlineModel model = headlineModelArrayList.get(position);
+        HeadlineModel model = headlineModelList.get(position);
         holder.headlineTV.setText(model.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (headlineModelList == null){
+            return 0;
+        }
+        return headlineModelList.size();
+    }
+
+    public void setTasks(List<HeadlineModel> headlineList) {
+        headlineModelList = headlineList;
+        notifyDataSetChanged();
+    }
+
+    public List<HeadlineModel> getTasks() {
+        return headlineModelList;
     }
 
     public class Viewholder extends RecyclerView.ViewHolder {

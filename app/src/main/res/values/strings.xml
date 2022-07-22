@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NewsHeadlinesApp</string>
-    <string name="button_text">Get Headlines</string>
+    <string name="button_get_text">Get Headlines</string>
+    <string name="button_clear_text">Clear Headlines</string>
     <string name="title">Sample Text</string>
     <string name="no_results">"No Results Found"</string>
     <string name="newsAPI_key">7e459eb1e1ab4e2399fc6ca47720528e</string>
