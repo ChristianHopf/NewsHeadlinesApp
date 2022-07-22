@@ -1,11 +1,13 @@
 package com.example.newsheadlinesapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +72,27 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void articleDialog(View view){
-
+        // query db for article with the same title
+        TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+        String title = tvTitle.getText().toString();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final HeadlineModel thisHeadline = mDb.headlineDao().loadHeadlineByTitle(title);
+                // open dialog with that article's information
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.article_dialog,null);
+                TextView dTitle = mView.findViewById(R.id.dialogTitle);
+                TextView dAuthor = mView.findViewById(R.id.dialogAuthor);
+                TextView dDesc = mView.findViewById(R.id.dialogDescription);
+                dTitle.setText(thisHeadline.getTitle());
+                dAuthor.setText(thisHeadline.getAuthor());
+                dDesc.setText(thisHeadline.getDescription());
+                builder.setView(mView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
     }
 
     /**

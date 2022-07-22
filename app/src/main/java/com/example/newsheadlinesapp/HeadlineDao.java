@@ -23,7 +23,12 @@ public interface HeadlineDao {
     @Delete
     void deleteHeadline(HeadlineModel headline);
 
-    @Query("SELECT * FROM HEADLINE WHERE ID = :id")
-    HeadlineModel loadHeadlineById(int id);
+    /**
+     * Query for opening article dialogs: query by article title
+     * @param title
+     * @return
+     */
+    @Query("SELECT * FROM HEADLINE WHERE title = :title")
+    HeadlineModel loadHeadlineByTitle(String title);
 
 }
