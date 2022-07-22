@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void getHeadlines(View view){
-        new FetchHeadline(headlineModelArrayList).execute();
+        new FetchHeadline(this, headlineModelArrayList).execute();
     }
 
     /**

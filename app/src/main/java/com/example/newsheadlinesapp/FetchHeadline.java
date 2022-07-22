@@ -1,5 +1,6 @@
 package com.example.newsheadlinesapp;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
@@ -15,11 +16,13 @@ public class FetchHeadline extends AsyncTask<String, Void, String> {
     private WeakReference<TextView> mAuthorText;
     private WeakReference<TextView> mDescriptionText;
     private ArrayList<HeadlineModel> headlineModelArrayList;
+    private Context context;
 
-    FetchHeadline(ArrayList<HeadlineModel> headlineModelArrayList) {
+    FetchHeadline(Context context, ArrayList<HeadlineModel> headlineModelArrayList) {
         /*this.mTitleText = new WeakReference<>(titleText);
         this.mAuthorText = new WeakReference<>(authorText);
         this.mDescriptionText = new WeakReference<>(descriptionText);*/
+        this.context = context;
         this.headlineModelArrayList = headlineModelArrayList;
     }
 
@@ -31,7 +34,7 @@ public class FetchHeadline extends AsyncTask<String, Void, String> {
      */
     @Override
     protected String doInBackground(String... strings) {
-        return NetworkUtils.getHeadlineInfo();
+        return NetworkUtils.getHeadlineInfo(context);
     }
 
     /**

@@ -21,14 +21,19 @@ public class NetworkUtils {
     // Parameter to filter by print type.
     private static final String PRINT_TYPE = "printType";
 
-    static String getHeadlineInfo(){
+    /**
+     * Send GET request to NewsAPI and return JSON string to NetworkUtils.doInBackground.
+     * Includes context in order to use apiKey string resource
+     * @return
+     */
+    static String getHeadlineInfo(Context context){
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String articleJSONString = null;
         try {
             // use URIBuilder to build URI
             Uri builtURI = Uri.parse(ARTICLES_BASE_URL).buildUpon()
-                    .appendQueryParameter("apiKey", "7e459eb1e1ab4e2399fc6ca47720528e")
+                    .appendQueryParameter("apiKey", context.getResources().getString(R.string.newsAPI_key))
                     .build();
             // convert URI to request string
             URL requestURL = new URL(builtURI.toString());
@@ -41,8 +46,8 @@ public class NetworkUtils {
             urlConnection.setRequestProperty("Accept-Charset", "UTF-8");
             urlConnection.setDoInput(true);
             urlConnection.connect();
+            // log response code
             Log.d(LOG_TAG, String.valueOf(urlConnection.getResponseCode()));
-            Log.d(LOG_TAG, urlConnection.getResponseMessage());
 
             // set up connection response
             InputStream inputStream = urlConnection.getInputStream();
